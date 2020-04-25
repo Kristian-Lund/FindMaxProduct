@@ -1,8 +1,7 @@
-
-#from termcolor import colored
-
 from Functions import color
-
+from colorama import init, Fore, Back, Style
+init()
+PrintColors = 1
 # A class of the spreadsheet list. Constructed by the input string and the dim of the window (4x4 according to the task)
 
 class ListClass:
@@ -13,13 +12,13 @@ class ListClass:
         self.Rows = 0
         self.Columns = 0
         self.WindowDim = WindowDim
-        self.PrintableList = SpreadSheetString#colored(SpreadSheetString, 'red')
+        self.PrintableList = SpreadSheetString
 
         NumberOfColumnsTemp = []
         SpreadSheetList = SpreadSheetString.split('\n')
         self.Rows = len(SpreadSheetList)
         for i in range(len(SpreadSheetList)):
-            #Asserting line for line in the final lis
+            #Asserting line for line in the final list
             NumberOfColumnsTemp.append(len(SpreadSheetList[i].split(' ')))
             self.List.append(list(map(int,SpreadSheetList[i].split(' '))))
         self.Rows = len(NumberOfColumnsTemp)
@@ -43,14 +42,12 @@ class ListClass:
         else:
             return 'The list in invalid'
 
-
     def runWindowCalcultions(self):
         HorizontalCalculations = self.__runHorizontalWindow()
         VerticalCalculations = self.__runVerticalWindow()
         DiagonalCalculations = self.__runDiagonalWindow()
         ReverseDiagonalCalculations = self.__runReverseDiagonalWindow()
         return  self.__findCalculationMaxima(HorizontalCalculations, VerticalCalculations ,DiagonalCalculations ,ReverseDiagonalCalculations )
-
 
     def __findCalculationMaxima(selfself, HorizontalCalculations, VerticalCalculations, DiagonalCalculations, ReverseDiagonalCalculations):
         MaxList = [HorizontalCalculations[0], VerticalCalculations[0], DiagonalCalculations[0], ReverseDiagonalCalculations[0]]
@@ -77,18 +74,27 @@ class ListClass:
         return resultstring + ')\n\nLocated ' +CalculationMaxima[0 ]+ ':\t' + str(CalculationMaxima[1][2])
 
     def __makePrintableList(self,CalculationMaxima):
+
         returnSpreadSheetString = ''
-        for Row in range(self.Rows):
-            for Column in range(self.Columns):
-                if (self.__checkIfCoordinatesAreInCalculation(Row,Column,CalculationMaxima)):
-                    returnSpreadSheetString = returnSpreadSheetString + color.RED +str(self.List[Row][Column]).zfill(2) + color.END#colored(str(self.List[Row][Column]).zfill(2), 'red')
-                    #returnSpreadSheetString = returnSpreadSheetString + str(self.List[Row][Column]).zfill(2)
-                else:
-                    returnSpreadSheetString = returnSpreadSheetString + color.GREEN +str(self.List[Row][Column]).zfill(2) + color.END#colored(str(self.List[Row][Column]).zfill(2), 'green')
-                    #returnSpreadSheetString = returnSpreadSheetString + str(self.List[Row][Column]).zfill(2)
-                returnSpreadSheetString = returnSpreadSheetString + ' '
-            returnSpreadSheetString = returnSpreadSheetString + '\n'
-        return returnSpreadSheetString
+        if(PrintColors):
+            #Rewriting the spreadheet string number by number and adding colors if they are a factor or not in the max product
+            for Row in range(self.Rows):
+                for Column in range(self.Columns):
+                    if (self.__checkIfCoordinatesAreInCalculation(Row,Column,CalculationMaxima)):
+                        #Putting colors red to factors in Maxima
+                        if (PrintColors):returnSpreadSheetString = returnSpreadSheetString + Fore.RED +str(self.List[Row][Column]).zfill(2) +Fore.RESET
+                            #<For not using colorama>returnSpreadSheetString = returnSpreadSheetString + color.RED +str(self.List[Row][Column]).zfill(2) + color.END
+                        else:returnSpreadSheetString = returnSpreadSheetString + str(self.List[Row][Column]).zfill(2)
+                    else:
+                        #Putting colors green to factors not in Maxima
+                        if(PrintColors): returnSpreadSheetString = returnSpreadSheetString + Fore.GREEN +str(self.List[Row][Column]).zfill(2) +Fore.RESET
+                            #<For not using colorama>returnSpreadSheetString = returnSpreadSheetString + color.GREEN +str(self.List[Row][Column]).zfill(2) + color.END
+                        else: returnSpreadSheetString = returnSpreadSheetString + str(self.List[Row][Column]).zfill(2)
+                    returnSpreadSheetString = returnSpreadSheetString + ' '
+                returnSpreadSheetString = returnSpreadSheetString + '\n'
+            return returnSpreadSheetString
+        else:
+            return self.PrintableList
 
     def __checkIfCoordinatesAreInCalculation(self,RowNo, ColumnNo, CalculationMaxima):
         for i in range(len(CalculationMaxima[1][2])):
@@ -144,13 +150,6 @@ class ListClass:
                     MaxCoordinates = Coordinates
         return Max,  MaxFactors, MaxCoordinates
 
-
-    def __multiplyFactors(self,Factors):
-        product = 1
-        for i in range(len(Factors)):
-            product = product*Factors[i]
-        return product
-
     def __getHorizontalSubList(self,RowNo, ColumnNo):
         Factors = []
         Coordinates = []
@@ -183,4 +182,8 @@ class ListClass:
             Factors.append(self.List[RowNo+i][ColumnNo+self.WindowDim-1-i])
         return Factors, Coordinates
 
-
+    def __multiplyFactors(self,Factors):
+            product = 1
+            for i in range(len(Factors)):
+                product = product*Factors[i]
+            return product
