@@ -10,7 +10,9 @@ DirtyString = f.read()
 CleanString = cleanString(DirtyString)
 List = ListClass(CleanString, WindowDim)
 
+
 print(List)
+print(List.getWindowCalcultions())
 
 
 
