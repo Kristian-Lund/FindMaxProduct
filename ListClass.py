@@ -21,7 +21,7 @@ class ListClass:
         SpreadSheetList = SpreadSheetString.split('\n')
         self.Rows = len(SpreadSheetList)
         for i in range(len(SpreadSheetList)):
-            #Asserting line for line in the final list
+            #Appending line for line in the List
             NumberOfColumnsTemp.append(len(SpreadSheetList[i].split(' ')))
             self.List.append(list(map(int,SpreadSheetList[i].split(' '))))
         self.Rows = len(NumberOfColumnsTemp)
@@ -34,7 +34,7 @@ class ListClass:
             print('The list doesnt have same same number of columns in each row')
 
     def __str__(self):
-        #Trigger a run of the calculation, and "stringyfy" the results
+        #Trigger a run of the calculation, and "stringyfies" the results
         if self.Columns>self.WindowDim and self.Rows>self.WindowDim:
             CalculationMaxima = self.getWindowCalcultions()
             PrintableList = self.__makePrintableList(CalculationMaxima)
@@ -45,6 +45,8 @@ class ListClass:
             return ReturnString
         else:
             return 'The list in invalid'
+
+#-------Calculation Control Actions---------
 
     def getWindowCalcultions(self):
         #Run windowing in 4 cycles, horizontal, vertical, diagonal (\), and reverse diagonal(/)
@@ -139,6 +141,8 @@ class ListClass:
             Coordinates.append([RowNo+i, ColumnNo+self.WindowDim-1-i])
             Factors.append(self.List[RowNo+i][ColumnNo+self.WindowDim-1-i])
         return Factors, Coordinates
+
+#-------Calculation Actions---------
 
     def __checkProductAndUpdate(self,NewValues, PreviousReturnValues):
         #Check if the new product has a higher value than the already found maxima, if so update MaxProduct, MaxFactors and MaxCoordinates. The return values are related to the max found
