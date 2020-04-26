@@ -1,4 +1,4 @@
-from Functions import color
+#from Functions import color
 from colorama import init, Fore
 init()
 PrintColors = 1
